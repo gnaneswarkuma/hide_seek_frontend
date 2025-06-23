@@ -13,7 +13,6 @@
     "@react-three/drei": "^10.3.0",
     "@react-three/fiber": "^9.1.2",
     "@react-three/rapier": "^2.1.0",
-    "playroomkit": "^0.0.87",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
