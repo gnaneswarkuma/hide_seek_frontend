@@ -62,7 +62,6 @@ export default function CubeController({ id, roomname, detalis, room, co }) {
   }, []);
 
   useEffect(() => {
-    // Mouse and touch camera rotation
     const onMouseDown = () => (isMouseDown.current = true);
     const onMouseUp = () => (isMouseDown.current = false);
     const onMouseMove = (e) => {
@@ -147,6 +146,13 @@ export default function CubeController({ id, roomname, detalis, room, co }) {
 
     const pos = body.translation();
     setPosition([pos.x, pos.y, pos.z]);
+
+    // ✅ Reset position if out of bounds
+    if (pos.y < -5 || pos.x < -20 || pos.z < -20) {
+      body.setTranslation({ x: 0, y: 15, z: 0 }, true);
+      body.setLinvel({ x: 0, y: 0, z: 0 }, true);
+      body.setAngvel({ x: 0, y: 0, z: 0 }, true);
+    }
 
     const camOffset = new THREE.Vector3(-Math.sin(angle) * 3, 2.3, -Math.cos(angle) * 3);
     const camTarget = new THREE.Vector3(pos.x, pos.y, pos.z).add(camOffset);

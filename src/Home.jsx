@@ -103,9 +103,9 @@ export const RoomManager = () => {
       justifyContent: 'center',
       fontFamily: 'Orbitron, sans-serif',
       color: '#fff',
-      position:"absolute",
-      top:"0",
-      left:"0",
+      position: "absolute",
+      top: "0",
+      left: "0",
     }}>
       {!inRoom ? (
         <div style={{
@@ -187,22 +187,56 @@ export const RoomManager = () => {
             </div>
           </div>
 
-          {isCreator && (isCreator==myname) && !gameStarted && (
+          {isCreator && isCreator === myname && !gameStarted && (
             <>
-              
               <p>Select the map:</p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1vw', marginTop: '2vh' }}>
                 {['Castle', 'Night Castle', 'Bookland', 'Night Bookland'].map((m, i) => (
-                  <button key={i} onClick={() => handleMap(i)} style={buttonStyleSmall}>{m}</button>
+                  <button
+                    key={i}
+                    onClick={() => handleMap(i)}
+                    style={{
+                      ...buttonStyleSmall,
+                      backgroundColor: map === i ? '#28a745' : '#0066ff',
+                      color: 'white'
+                    }}
+                  >
+                    {m}
+                  </button>
                 ))}
               </div>
+
               <p>Select the duration:</p>
               <div style={{ display: 'flex', gap: '1vw', marginTop: '2vh' }}>
                 {[1, 2, 5, 7].map(t => (
-                  <button key={t} onClick={() => handletime(t)} style={buttonStyleSmall}>{t} min</button>
+                  <button
+                    key={t}
+                    onClick={() => handletime(t)}
+                    style={{
+                      ...buttonStyleSmall,
+                      backgroundColor: changetime === t ? '#28a745' : '#0066ff',
+                      color: 'white'
+                    }}
+                  >
+                    {t} min
+                  </button>
                 ))}
               </div>
-              <button onClick={handleStart} style={{width:"30vw",height:"10vh",marginLeft:"30vw",borderRadius:"2vw",color:"whitesmoke",backgroundColor:"brown",fontSize:"2vw"}}>Start Game</button>
+
+              <button
+                onClick={handleStart}
+                style={{
+                  width: "30vw",
+                  height: "10vh",
+                  marginLeft: "30vw",
+                  borderRadius: "2vw",
+                  color: "whitesmoke",
+                  backgroundColor: "brown",
+                  fontSize: "2vw"
+                }}
+              >
+                Start Game
+              </button>
             </>
           )}
         </div>

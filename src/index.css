@@ -8,3 +8,7 @@
   -ms-user-select: none;     /* Internet Explorer/Edge */
   user-select: none; 
 }
+body {
+  touch-action: none;  /* disables pinch zoom and double-tap zoom */
+  overscroll-behavior: contain;
+}

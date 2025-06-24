@@ -2,12 +2,67 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Hide_and_Seek</title>
+    <style>
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        touch-action: none; /* disables pinch, double-tap */
+        -ms-touch-action: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+      }
+
+      #root {
+        width: 100%;
+        height: 100%;
+        touch-action: none;
+      }
+    </style>
   </head>
-  <body>
+  <body ontouchstart="">
     <div id="root"></div>
+
+    <!-- ✅ Prevent Zoom on Laptop (trackpad) and Mobile (pinch, double-tap) -->
+    <script>
+      // Prevent pinch-zoom on trackpad (laptop) and mobile
+      window.addEventListener('wheel', function (e) {
+        if (e.ctrlKey) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      // Prevent Ctrl/Cmd + '+', '-', '=', or '0' (browser zoom shortcuts)
+      window.addEventListener('keydown', function (e) {
+        if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0'].includes(e.key)) {
+          e.preventDefault();
+        }
+      });
+
+      // Prevent pinch zoom on mobile devices
+      let lastTouchEnd = 0;
+      document.addEventListener('touchstart', function (e) {
+        if (e.touches.length > 1) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      document.addEventListener('touchend', function (e) {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+          e.preventDefault();
+        }
+        lastTouchEnd = now;
+      }, false);
+    </script>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
