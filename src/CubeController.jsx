@@ -5,7 +5,7 @@ import { RigidBody } from '@react-three/rapier';
 import { socket } from './server';
 import { Foot_ball } from './components/Foot_ball';
 
-export default function CubeController({ id, roomname, detalis, room ,co}) {
+export default function CubeController({ id, roomname, detalis, room, co }) {
   const targetColorRef = useRef(room.detalis[room.players[0]].color);
   const kkRef = useRef(0);
   const collisionEnabledRef = useRef(true);
@@ -22,7 +22,7 @@ export default function CubeController({ id, roomname, detalis, room ,co}) {
   const isMouseDown = useRef(false);
   const isGrounded = useRef(true);
   const [walk, useWalk] = useState(false);
-  const [check,setCheck]=useState("didn't scored this round");
+  const [check, setCheck] = useState("didn't scored this round");
 
   const SPEED = 5;
   const CAMERA_LERP = 0.1;
@@ -44,7 +44,7 @@ export default function CubeController({ id, roomname, detalis, room ,co}) {
         targetColorRef.current = newTarget;
         collisionEnabledRef.current = true;
         socket.emit("newtarget", { roomname, newTarget });
-        setCheck("didn't scored this round")
+        setCheck("didn't scored this round");
       }
     }, 30000);
     return () => clearInterval(interval);
@@ -62,6 +62,7 @@ export default function CubeController({ id, roomname, detalis, room ,co}) {
   }, []);
 
   useEffect(() => {
+    // Mouse and touch camera rotation
     const onMouseDown = () => (isMouseDown.current = true);
     const onMouseUp = () => (isMouseDown.current = false);
     const onMouseMove = (e) => {
@@ -69,13 +70,43 @@ export default function CubeController({ id, roomname, detalis, room ,co}) {
         angleRef.current -= e.movementX * 0.002;
       }
     };
+
+    let lastTouchX = null;
+
+    const onTouchStart = (e) => {
+      if (e.touches.length === 1) {
+        isMouseDown.current = true;
+        lastTouchX = e.touches[0].clientX;
+      }
+    };
+
+    const onTouchMove = (e) => {
+      if (!isMouseDown.current || e.touches.length !== 1) return;
+      const touchX = e.touches[0].clientX;
+      const deltaX = touchX - lastTouchX;
+      angleRef.current -= deltaX * 0.002;
+      lastTouchX = touchX;
+    };
+
+    const onTouchEnd = () => {
+      isMouseDown.current = false;
+      lastTouchX = null;
+    };
+
     window.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mouseup', onMouseUp);
     window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('touchstart', onTouchStart);
+    window.addEventListener('touchmove', onTouchMove);
+    window.addEventListener('touchend', onTouchEnd);
+
     return () => {
       window.removeEventListener('mousedown', onMouseDown);
       window.removeEventListener('mouseup', onMouseUp);
       window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
     };
   }, []);
 
@@ -125,7 +156,6 @@ export default function CubeController({ id, roomname, detalis, room ,co}) {
     smoothedLookTarget.current.lerp(lookTarget, CAMERA_LERP);
     camera.lookAt(smoothedLookTarget.current);
 
-    // Send updated position to server
     const prev = prevPositionRef.current;
     const dx = Math.abs(prev.x - pos.x);
     const dy = Math.abs(prev.y - pos.y);
@@ -163,13 +193,13 @@ export default function CubeController({ id, roomname, detalis, room ,co}) {
           socket.emit("score", { id, roomname });
           collisionEnabledRef.current = false;
           console.log("✅ Scored!", currentTarget);
-          setCheck("✅ Scored!")
+          setCheck("✅ Scored!");
         }
       }}
     >
       <group ref={characterRef} scale={0.5}>
         <Foot_ball shirt={detalis.color} walk={walk} />
-        {co==1 &&  <pointLight  intensity={30} decay={1} distance={5} color={detalis.color} />}
+        {co === 1 && <pointLight intensity={30} decay={1} distance={5} color={detalis.color} />}
       </group>
     </RigidBody>
   );
