@@ -49,7 +49,7 @@ export const Winner = () => {
         <h1 style={{ fontSize: '3rem', color: '#00ffcc' }}>Game Over</h1>
         <h2 style={{ fontSize: '2rem', color: '#ffd700' }}>🏆 Winner: {winnerName}</h2>
         <p style={{ fontSize: '1rem', color: '#ccc' }}>Thanks for playing!</p>
-        <a href="http://localhost:5173/">wanan play again</a>
+        <a href="https://chimerical-souffle-23170d.netlify.app/">wanan play again</a>
       </div>
     </div>
   );
